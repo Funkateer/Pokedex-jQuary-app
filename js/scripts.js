@@ -3,8 +3,34 @@ var pokemonRepository = (function(){
     var repository = [];
     var apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=42';
 
-       // Runs the starting code
-       main();
+    // starts with making an API request
+    makeRequest(apiUrl, loadList);
+
+    function makeRequest(url, callback) {
+        $.ajax(url, { dataType: 'json' }).fail(function(){
+            console.log('The request failed (maybe you are offline?)');
+        }).then(function (response) {
+            callback(response);
+        });
+    }
+
+    //fetch pokemon data from API and loop it in a json 'pokemon' object
+    function loadList(responseFromAPI) {
+        responseFromAPI.results.forEach(function(item) {
+            var data = {
+                name: item.name,
+                detailsUrl: item.url
+            };
+            // Adds the retrieved data to the Repository
+            add(data);
+        });
+
+        // Populates the DOM with the loaded list
+        getAll().forEach(function (item, index) {
+            addListItem(item, index);
+        });
+    }
+
 
     //returns an array of values being pushed by the 'add()' function
     function getAll(){
@@ -20,66 +46,34 @@ var pokemonRepository = (function(){
     function addListItem(item, index){
 
         // Creates appends and give class to the list 'poke-list'
-        var $newListItem = document.createElement('li');
-        var $appendNewListItem = document.querySelector('.item-list');
-        $newListItem.setAttribute('class', 'poke-list__item');
-        $appendNewListItem.appendChild($newListItem);
+        var $newListItem = $('<li class = "poke-list__item"> </li>');
+        $('.item-list').append($newListItem);
 
-        // Creates and appends the button to 'list item'
-        var $newButtonInsideListItem = document.createElement('button');
-        $newButtonInsideListItem.setAttribute('class', 'poke-list__button');
-        $newButtonInsideListItem.setAttribute('id', String(index));
-        var $appendNewButtonInsideListItem = document.querySelector('.poke-list__item:last-child');
-        $newButtonInsideListItem.innerText = item['name'];
-        $appendNewButtonInsideListItem.appendChild($newButtonInsideListItem);
-
-        // Adds event listener on button that shows pokemon's detail in the modal
-        $newButtonInsideListItem.addEventListener('click', element =>{
-            var $clickedButton = element.target;
-            showDetails($clickedButton.id);
+        // Creates and appends the button to 'list item' and adds event listener on button that shows pokemon's detail in the modal
+        var $pokemonInfoButton = $('<button class = "poke-list__button" id = "'+String(index)+'"> '+item["name"]+' </button>');
+        $('.poke-list__item:last-child').append($pokemonInfoButton).on('click', function(e){
+            showDetails(e.target.id);
         });
     }
 
-    function makeRequest(url, callback) {
-        var request = new XMLHttpRequest();
-
-        request.addEventListener('load', resolve);
-        request.addEventListener('error', reject);
-
-        request.open('GET', url);
-        request.send();
-
-
-        function reject() {
-            console.log('The request failed (maybe you are offline?)');
-        }
-
-        function resolve(e) {
-            var xhr = e.target;
-            callback(xhr.responseText);
-        }
+    //  response of '$pokemonInfoButton' event
+    function showDetails(item) {
+        var requestUrl = getAll()[item].detailsUrl;
+        makeRequest(requestUrl, createModalWithDetails);
     }
 
-    //fetch pokemon data from API and loop it in a json 'pokemon' object
-    function loadList(responseFromAPI) {
-        JSON.parse(responseFromAPI).results.forEach(item => {
-            var data = {
-                name: item.name,
-                detailsUrl: item.url
-            };
-            // Adds the retrieved data to the Repository
-            add(data);
-        });
+    // creates Modal
+    function createModalWithDetails(responseFromAPI) {
+        var item = loadDetails(responseFromAPI);
 
-        // Populates the DOM with the loaded list
-        getAll().forEach((item, index) => {
-            addListItem(item, index);
-        });
+        showModal(item);
+
+        var modalImg = $('<div class = "modal-img"> <img src = "' + String(item.imageUrl) + '" alt = "an image of ' + String(item.name) +' " > </div>');
+        $('.modal').append(modalImg);
     }
 
     // from 'pokemon' object fetches details: img, height and type
-    function loadDetails(responseFromAPI) {
-        var details = JSON.parse(responseFromAPI);
+    function loadDetails(details) {
         // id is the same as position in array[index] + 1
         var item = getAll()[details.id - 1];
         item.imageUrl = details.sprites.front_default;
@@ -95,111 +89,38 @@ var pokemonRepository = (function(){
         return item;
     }
 
-    //  response of '$pokemonInfoButton' event
-    function showDetails(item) {
-        var requestUrl = getAll()[item].detailsUrl;
-        makeRequest(requestUrl, createModalWithDetails);
-    }
-
-    // creates Modal
-    function createModalWithDetails(responseFromAPI) {
-        var item = loadDetails(responseFromAPI);
-
-        showModal(item.name, `Height: ${item.height} Decimetres\n Weight: ${item.weight} Hectograms\n Type: ${item.type}`);
-
-        var $modalContainer = document.querySelector('.modal');
-
-        var modalImg = document.createElement('div');
-        modalImg.classList.add('modal-img');
-
-        var img = document.createElement('img');
-        img.setAttribute('src', `${item.imageUrl}`);
-        img.setAttribute('alt', `an image of ${item.name}`);
-
-        modalImg.appendChild(img);
-        $modalContainer.appendChild(modalImg);
-    }
     // fires event that show modal with information
-    function showModal(title, text) {
-        var $modalContainer = document.querySelector('#modal-container');
-        $modalContainer.innerHTML = '';
+    function showModal(item) {
 
-        var modal = document.createElement('div');
-        modal.classList.add('modal');
+        $('#modal-container').html('');
 
-        var closeButtonElement = document.createElement('button');
-        closeButtonElement.classList.add('modal-close');
-        closeButtonElement.innerText = 'Close';
-        closeButtonElement.addEventListener('click', hideModal);
+        var modal = $('<div class = "modal"> <button class = "modal-close">Close</button> <h2>' + item.name + '</h2> <p>' + 'Height: '+ String(item.height) +' Decimetres <br> Weight: '+ String(item.weight)+' Hectograms <br> Type: '+ String(item.type) + ' </p> </div>');
 
-        var titleElement = document.createElement('h2');
-        titleElement.innerText = title;
+        $('#modal-container').addClass('is-visible').append(modal);
+        $('.modal-close').on('click',function(){
+            hideModal(true);
+        });
 
-        var contentElement = document.createElement('p');
-        contentElement.innerText = text;
+        // Code for closing modals with 'Esc' or clicking outside the modal
+        $(window).on('keydown', function(e) {
+            // var $modalContainer = document.querySelector('#modal-container');
+            if (e.key === 'Escape' && $('#modal-container').hasClass('is-visible')) {
+                hideModal(true);
+            }
+        });
 
-        modal.appendChild(closeButtonElement);
-        modal.appendChild(titleElement);
-        modal.appendChild(contentElement);
-        $modalContainer.appendChild(modal);
-
-        $modalContainer.classList.add('is-visible');
-
+        $(window).on('click', function(e) {
+            if (e.target!== $('#modal-container')) {
+                hideModal(true);
+            }
+        });
     }
 
     function hideModal(resolveOrReject=null) {
-        var $modalContainer = document.querySelector('#modal-container');
-        $modalContainer.classList.remove('is-visible');
-        // If no arguments are passed, it does nothing (defaults to null).
-        // Pass resolve() or reject() functions as arguments
+        $('#modal-container').removeClass('is-visible');
         if (typeof(resolveOrReject) === 'function') {
             resolveOrReject();
         }
-    }
-
-    function showDialog(title, text, resolve, reject) {
-        showModal(title, text);
-        var modal = document.querySelector('.modal');
-
-        var confirmButton = document.createElement('button');
-        confirmButton.classList.add('modal-confirm');
-        confirmButton.innerText = 'Confirm';
-        confirmButton.addEventListener('click', () => {
-            hideModal(resolve);
-        });
-
-        var cancelButton = document.createElement('button');
-        cancelButton.classList.add('modal-cancel');
-        cancelButton.innerText = 'Cancel';
-        cancelButton.addEventListener('click', () => {
-            hideModal(reject);
-        });
-
-        modal.appendChild(confirmButton);
-        modal.appendChild(cancelButton);
-
-        confirmButton.focus();
-    }
-
-    function main () {
-        // Populates the page with the items retrieved from API
-        makeRequest(apiUrl, loadList);
-
-        // Code for closing modals with 'Esc' or clicking outside the modal
-        window.addEventListener('keydown', e => {
-            var $modalContainer = document.querySelector('#modal-container');
-            if (e.key === 'Escape' && $modalContainer.classList.contains('is-visible')) {
-                hideModal(true);
-            }
-        });
-
-        window.addEventListener('click', e => {
-            var target = e.target;
-            var $modalContainer = document.querySelector('#modal-container');
-            if (target === $modalContainer) {
-                hideModal(true);
-            }
-        });
     }
     // returning all functions values occur inside the IFEE scope
     return {
@@ -212,8 +133,6 @@ var pokemonRepository = (function(){
         makeRequest: makeRequest,
         showModal: showModal,
         hideModal: hideModal,
-        showDialog: showDialog,
-        main: main
     };
 
 }) ();//IIFE wrap
