@@ -2,4 +2,5 @@
 
 Clone of the 'Pokedex-simple-js-app' using jQuery instead of vanilla Js
 
-https://funkateer.github.io/Pokedex-jQuary-app
+Have a look:
+https://funkateer.github.io/Pokedex-jQuery-app
