@@ -1,4 +1,4 @@
-# Pokedex-jQuary-app
+# Pokedex-jQuery-app
 
 Clone of the 'Pokedex-simple-js-app' using jQuery instead of vanilla Js
 

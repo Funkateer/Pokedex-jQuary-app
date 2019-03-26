@@ -11,6 +11,13 @@ body{
 
 h1{
     padding-left: 14%;
+    display: inline-block;
+}
+
+a,
+a:visited {
+    color: blue;
+    text-decoration: none;
 }
 
 .main-content {
@@ -119,6 +126,23 @@ h2{
     float: center;
     text-align: center;
     height: 250px
+}
+
+footer {
+    margin-top: 60px;
+    text-align: center;
+    width: 100%;
+    font-size: 14pt;
+}
+
+.CTA{
+    font-family:  Courier;
+    margin-bottom: 5px;
+}
+
+.socialIcon{
+    height: 67px;
+    padding: 5px 15px 5px 15px;
 }
 
 @media all and (max-width: 720px) {
