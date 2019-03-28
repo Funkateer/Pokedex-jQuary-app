@@ -1,5 +1,5 @@
 // IIFE wrap
-var pokemonRepository = (function(){
+(function(){
     var repository = [];
     var apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=42';
 
@@ -50,7 +50,7 @@ var pokemonRepository = (function(){
         $('.item-list').append($newListItem);
 
         // Creates and appends the button to 'list item' and adds event listener on button that shows pokemon's detail in the modal
-        var $pokemonInfoButton = $('<button class = "poke-list__button" id = "'+String(index)+'"> '+item["name"]+' </button>');
+        var $pokemonInfoButton = $('<button class = "poke-list__button" id = "'+String(index)+'"> '+item['name']+' </button>');
         $('.poke-list__item:last-child').append($pokemonInfoButton).on('click', function(e){
             showDetails(e.target.id);
         });
@@ -82,7 +82,7 @@ var pokemonRepository = (function(){
         // array that holds pokemon type names, iterates if there is more than one type
         item.type =[];
         details.types.forEach(function(e){
-            item.type.push(" " + e.type.name);
+            item.type.push(' ' + e.type.name);
             return item.type;
         });
 
