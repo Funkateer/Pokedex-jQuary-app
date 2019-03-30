@@ -1,171 +1,171 @@
 * {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 body{
-    margin: 2% 3%;
-    padding: 0;
-    background-color: #c5b1ec;
-    font-size: 13pt;
+	margin: 2% 3%;
+	padding: 0;
+	background-color: #c5b1ec;
+	font-size: 13pt;
 }
 
 h1{
-    padding-left: 14%;
-    display: inline-block;
+	padding-left: 14%;
+	display: inline-block;
 }
 
 a,
 a:visited {
-    color: blue;
-    text-decoration: none;
+	color: blue;
+	text-decoration: none;
 }
 
 .main-content {
-    width: 90%;
-    margin: 0 auto;
-    text-align: left;
+	width: 90%;
+	margin: 0 auto;
+	text-align: left;
 }
 
 ul{
-    background-color: #b67cec;
-    display: inline-block;
-    width: 40%;
-    margin: 0 auto;
+	background-color: #b67cec;
+	display: inline-block;
+	width: 40%;
+	margin: 0 auto;
 }
 
 .poke-list__item{
-    list-style: none;
-    margin: 20px 0;
+	list-style: none;
+	margin: 20px 0;
 }
 
 .poke-list__button{
-    border: 0;
-    padding: 9px 6px;
-    width: 60%;
-    background-color: #e4d8fc;
-    font-size: 15pt;
-    font-weight: 400;
+	border: 0;
+	padding: 9px 6px;
+	width: 60%;
+	background-color: #e4d8fc;
+	font-size: 15pt;
+	font-weight: 400;
 }
 
 button:focus{
-    outline: 0;
-    border: 1px solid blueviolet;
+	outline: 0;
+	border: 1px solid blueviolet;
 }
 
 button:hover{
-    cursor: pointer;
+	cursor: pointer;
 }
 
 
 #modal-container {
-    position: fixed;
-    padding: 20px;
-    box-sizing: border-box;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+	position: fixed;
+	padding: 20px;
+	box-sizing: border-box;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
 
-    /* to show it above other content */
-    z-index: 999;
+	/* to show it above other content */
+	z-index: 999;
 
-    /* to allow scrolling if the screen is not high enough*/
-    overflow: auto;
+	/* to allow scrolling if the screen is not high enough*/
+	overflow: auto;
 
-    /* this is used to center the modal */
-    display: none;
-    text-align: center;
+	/* this is used to center the modal */
+	display: none;
+	text-align: center;
 }
 
 #modal-container.is-visible {
-    display: block;
+	display: block;
 }
 
 .modal {
-    margin: auto;
-    display: inline-block;
-    box-sizing: border-box;
-    background: #FBECFF;
-    padding: 20px;
-    width: 100%;
-    max-width: 500px;
-    text-align: left;
+	margin: auto;
+	display: inline-block;
+	box-sizing: border-box;
+	background: #FBECFF;
+	padding: 20px;
+	width: 100%;
+	max-width: 500px;
+	text-align: left;
 }
 
 img{
-    display: inline-block;
-    height: 230px;
+	display: inline-block;
+	height: 230px;
 }
 
 p,
 h2{
-    text-align: center;
-    line-height: 25px
+	text-align: center;
+	line-height: 25px
 }
 
 .modal-close {
-    float: right;
-    -webkit-appearance: none;
-    border: 0;
-    background: none;
-    color: #777;
-    text-decoration: underline;
-    font-size: 7pt;
+	float: right;
+	-webkit-appearance: none;
+	border: 0;
+	background: none;
+	color: #777;
+	text-decoration: underline;
+	font-size: 7pt;
 }
 
 .modal h1 {
-    margin-top: 0;
+	margin-top: 0;
 }
 
 .modal p {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 .modal-img {
-    float: center;
-    text-align: center;
-    height: 250px
+	float: center;
+	text-align: center;
+	height: 250px
 }
 
 footer {
-    margin-top: 60px;
-    text-align: center;
-    width: 100%;
-    font-size: 14pt;
+	margin-top: 60px;
+	text-align: center;
+	width: 100%;
+	font-size: 14pt;
 }
 
 .CTA{
-    font-family:  Courier;
-    margin-bottom: 5px;
+	font-family:  Courier;
+	margin-bottom: 5px;
 }
 
 .socialIcon{
-    height: 67px;
-    padding: 5px 15px 5px 15px;
+	height: 67px;
+	padding: 5px 15px 5px 15px;
 }
 
 @media all and (max-width: 720px) {
-    body{
-        font-size: 12pt;
-        margin: 4px 0;
-    }
+	body{
+		font-size: 12pt;
+		margin: 4px 0;
+	}
 
-    h1{
-        padding: 0;
-        text-align: center;
-    }
+	h1{
+		padding: 0;
+		text-align: center;
+	}
 
-    ul{
-        display: block;
-        margin: 0 auto;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        width: 98%;
-    }
+	ul{
+		display: block;
+		margin: 0 auto;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		width: 98%;
+	}
 
-    .poke-list__button{
-        display: block;
-        width: 70%;
-    }
+	.poke-list__button{
+		display: block;
+		width: 70%;
+	}
 }
