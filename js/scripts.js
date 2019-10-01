@@ -1,138 +1,109 @@
 // IIFE wrap
 (function(){
-	var repository = [];
-	var apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=42';
 
-	// starts with making an API request
-	makeRequest(apiUrl, loadList);
+  var pokemonRepository = (function(){
+    var repository =[];
+    var apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
 
-	function makeRequest(url, callback) {
-		$.ajax(url, { dataType: 'json' }).fail(function(){
-			console.log('The request failed (maybe you are offline?)');
-		}).then(function (response) {
-			callback(response);
-		});
-	}
+    // returns an array of values being pushed by the 'add()' function
+    function getAll(){
+      return repository;
+    }
+    // pushes any values from 'loadList' function to the 'repository' array
+    function add(item){
+      repository.push(item);
+    }
 
-	//fetch pokemon data from API and loop it in a json 'pokemon' object
-	function loadList(responseFromAPI) {
-		responseFromAPI.results.forEach(function(item) {
-			var data = {
-				name: item.name,
-				detailsUrl: item.url
-			};
-			// Adds the retrieved data to the Repository
-			add(data);
-		});
+    //fetch pokemon data from API and loop it in a json 'pokemon' object
+    function loadList(){
+      return $.ajax(apiUrl, {dataType: 'json'}).then(function(item){
+        $.each(item.results, function(index, item){
+          var pokemon = {
+            name: item.name,
+            detailsUrl: item.url
+          }
+          // Adds the retrieved data to the Repository
+          add(pokemon)
+        })
+        }).catch(function(e){
+        console.error(e);
+      });
+    }
 
-		// Populates the DOM with the loaded list
-		getAll().forEach(function (item, index) {
-			addListItem(item, index);
-		});
-	}
+    function loadDetails(item){
+      var url = item.detailsUrl;
+      return $.ajax(url).then(function(details){
+        // add the details to the item
+        item.imageUrl = details.sprites.front_default;
+				item.height = details.height;
+				item.weight = details.weight;
+        item.types = details.types.map(function(pokemon) {
+        return pokemon.type.name;
+      });
 
+      }).catch(function(e){
+        console.error(e);
+      });
+    }
+    // returning all functions
+    return {
+      add: add,
+      getAll: getAll,
+      loadList: loadList,
+      loadDetails: loadDetails
+    };
+  })();
 
-	//returns an array of values being pushed by the 'add()' function
-	function getAll(){
-		return repository;
-	}
+  var $pokemonList = $('.pokemon-list')
 
-	// pushes any values from 'loadList' function to the 'repository' array
-	function add(item){
-		return repository.push(item);
-	}
+  function addListItem(pokemon){
+    var listItem = $('<button type="button" class="pokemon-list_item list-group-item list-group-item-action" data-toggle="modal" data-target="#pokemon-modal"></button>');
+    listItem.text(pokemon.name);
+    $pokemonList.append(listItem);
+    listItem.click(function() {
+      showDetails(pokemon)
+    });
+  }
 
-	//builds list of pokemon and append it to DOM
-	function addListItem(item, index){
+  //Modal display details about pokemon rom 'pokemon': img, height and type
+  function showDetails(pokemon){
+    pokemonRepository.loadDetails(pokemon).then(function() {
+      // creates Modal
+      var modal = $('.modal-body');
+      /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "name" }]*/
+      var name = $('.modal-title').text(pokemon.name);
+			var height = $('<p class="pokemon-height"></p>').text('Height: ' + pokemon.height + ' Decimetres.');
+			var weight = $('<p class="pokemon-weight"></p>').text('Weight: ' + pokemon.weight + ' Hectograms.');
+      var type = $('<p class="pokemon-type"></p>').text('Type: ' + pokemon.types + '.');
+      var image = $('<img class="pokemon-picture">');
+      image.attr('src', pokemon.imageUrl);
 
-		// Creates appends and give class to the list 'poke-list'
-		var $newListItem = $('<li class = "poke-list__item"> </li>');
-		$('.item-list').append($newListItem);
+      if(modal.children().length) {
+        modal.children().remove();
+      }
 
-		// Creates and appends the button to 'list item' and adds event listener on button that shows pokemon's detail in the modal
-		var $pokemonInfoButton = $('<button class = "poke-list__button" id = "'+String(index)+'"> '+item['name']+' </button>');
-		$('.poke-list__item:last-child').append($pokemonInfoButton).on('click', function(e){
-			showDetails(e.target.id);
-		});
-	}
+      modal.append(image)
+				.append(height)
+				.append(weight)
+        .append(type);
+    });
+  }
 
-	//  response of '$pokemonInfoButton' event
-	function showDetails(item) {
-		var requestUrl = getAll()[item].detailsUrl;
-		makeRequest(requestUrl, createModalWithDetails);
-	}
+  //Search pokemons
+  $(document).ready(function(){
+    $('#pokemon-search').on('keyup', function(){
+      var value = $(this).val().toLowerCase();
+      $('.pokemon-list_item').filter(function(){
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
 
-	// creates Modal
-	function createModalWithDetails(responseFromAPI) {
-		var item = loadDetails(responseFromAPI);
+  pokemonRepository.loadList().then(function(){
+    var pokemons = pokemonRepository.getAll();
 
-		showModal(item);
-
-		var modalImg = $('<div class = "modal-img"> <img src = "' + String(item.imageUrl) + '" alt = "an image of ' + String(item.name) +' " > </div>');
-		$('.modal').append(modalImg);
-	}
-
-	// from 'pokemon' object fetches details: img, height and type
-	function loadDetails(details) {
-		// id is the same as position in array[index] + 1
-		var item = getAll()[details.id - 1];
-		item.imageUrl = details.sprites.front_default;
-		item.height = details.height;
-		item.weight = details.weight;
-		// array that holds pokemon type names, iterates if there is more than one type
-		item.type =[];
-		details.types.forEach(function(e){
-			item.type.push(' ' + e.type.name);
-			return item.type;
-		});
-
-		return item;
-	}
-
-	// fires event that show modal with information
-	function showModal(item) {
-
-		$('#modal-container').html('');
-
-		var modal = $('<div class = "modal"> <button class = "modal-close">Close</button> <h2>' + item.name + '</h2> <p>' + 'Height: '+ String(item.height) +' Decimetres <br> Weight: '+ String(item.weight)+' Hectograms <br> Type: '+ String(item.type) + ' </p> </div>');
-
-		$('#modal-container').addClass('is-visible').append(modal);
-		$('.modal-close').on('click',function(){
-			hideModal(true);
-		});
-
-		// Code for closing modals with 'Esc' or clicking outside the modal
-		$(window).on('keydown', function(e) {
-			// var $modalContainer = document.querySelector('#modal-container');
-			if (e.key === 'Escape' && $('#modal-container').hasClass('is-visible')) {
-				hideModal(true);
-			}
-		});
-
-		$(window).on('click', function(e) {
-			if (e.target!== $('#modal-container')) {
-				hideModal(true);
-			}
-		});
-	}
-
-	function hideModal(resolveOrReject=null) {
-		$('#modal-container').removeClass('is-visible');
-		if (typeof(resolveOrReject) === 'function') {
-			resolveOrReject();
-		}
-	}
-	// returning all functions values occur inside the IFEE scope
-	return {
-		getAll: getAll,
-		add: add,
-		addListItem: addListItem,
-		loadList: loadList,
-		loadDetails: loadDetails,
-		showDetails: showDetails,
-		makeRequest: makeRequest,
-		showModal: showModal,
-		hideModal: hideModal,
-	};
-
-}) ();//IIFE wrap
+    $.each(pokemons, function(index, pokemon){
+        addListItem(pokemon);
+    });
+  });
+})();//IIFE wrap
