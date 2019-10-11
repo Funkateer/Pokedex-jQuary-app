@@ -66,4 +66,8 @@ footer {
     padding: 0;
     text-align: center;
   }
+  
+  .socialIcon{
+    height: 40px;
+  }
 }
