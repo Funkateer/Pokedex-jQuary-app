@@ -7,8 +7,8 @@ Clone of the 'Pokedex-simple-js-app' using jQuery and Bootstrap 4 instead of van
 
 
 ## Features
-Search for Pokemons
-Display in modals info about Pokemons
+- Search for Pokemons
+- Display in modals info about Pokemons
 
 ## Live Demo
 To see the app in action, go to (https://funkateer.github.io/Pokedex-jQuery-app)
