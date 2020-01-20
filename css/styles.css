@@ -41,20 +41,20 @@ a:visited {
 }
 
 footer {
-  margin-top: 60px;
   text-align: center;
   width: 100%;
-  font-size: 14pt;
+  padding-bottom: 10px;
+  /* position: absolute;
+  bottom: 10px; */
 }
 
-.CTA{
-  font-family: Courier;
-  margin-bottom: 5px;
+.footer-title{
+  margin-bottom: 10px;
 }
 
-.socialIcon{
-  height: 67px;
-  padding: 5px 15px 5px 15px;
+.social-img{
+  height: 50px;
+  margin: 3px;
 }
 
 @media all and (max-width: 720px) {
@@ -66,8 +66,14 @@ footer {
     padding: 0;
     text-align: center;
   }
-  
-  .socialIcon{
-    height: 40px;
+
+  .footer-title{
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+
+  .social-img{
+    height: 35px;
+    margin-bottom: 10px;
   }
 }
