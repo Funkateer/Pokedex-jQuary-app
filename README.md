@@ -1,9 +1,9 @@
 # Pokedex jQuery App
+Clone of the [Pokedex-simple-js-app](https://github.com/Funkateer/Pokedex-simple-js-app) using jQuery and Bootstrap4 instead of vanilla javascript
 
-Clone of the 'Pokedex-simple-js-app' using jQuery and Bootstrap 4 instead of vanilla Js
 
 ## Screenshots
-![screenshot](https://alabugrara.com/img/pokedex-jQuery-app-poster.png)
+![screenshot](img/pokedex-jQuery-app-poster.gif)
 
 
 ## Features
@@ -19,8 +19,6 @@ To see the app in action, go to (https://funkateer.github.io/Pokedex-jQuery-app)
 jQuery
 Bootstrap 4
 ```
-
-
 
 
 ## Contribute
@@ -42,7 +40,7 @@ Project Link: https://github.com/Funkateer/Pokedex-jQuery-app
 
 
 ## Contact
-Alaeddin Abugrara - [website](http://www.alabugrara.com) - [@twitter](https://twitter.com/twitter_handle) - [Github](https://github.com/Funkateer) - [Linked-in](https://www.linkedin.com/in/al%C3%A0-eddin-abugrara-214ba5115/)
+Alà Eddin Abugrara Abugrara - [website](http://www.alabugrara.com) - [@twitter](https://twitter.com/twitter_handle) - [Github](https://github.com/Funkateer) - [Linked-in](https://www.linkedin.com/in/al%C3%A0-eddin-abugrara-214ba5115/)
 
 
 <!-- Markdown links & imgs  -->
