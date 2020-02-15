@@ -3,7 +3,7 @@ Clone of the [Pokedex-simple-js-app](https://github.com/Funkateer/Pokedex-simple
 
 
 ## Screenshots
-![screenshot](img/pokedex-jQuery-app-poster.gif)
+![screenshot](img/poster-pokedex-jQuery-app.gif)
 
 
 ## Features
